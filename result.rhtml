@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" href="kwf.css" type="text/css" />
+  <title><%= text %> - ことば with flickr</title>
+</head>
+
+<body>
+  <h1>ことば with <span class="flick">flick</span><span class="r">r</span></h1>
+
+  <div class="photos">
+    <% photos.each do |char, photo, small| %>
+    <% unless photo %>
+    <span style="font: bold 50px serif;"><%= char %></span>
+    <% else %>
+    
+    <a href="<%= photo.url %>">
+      <% if small %>
+      <img src='<%= photo.source("Square") %>' alt='<%= char %>'
+           width='30' height='30' style='vertical-align: top;'/>
+      <% else %>
+      <img src='<%= photo.source("Thumbnail") %>' alt='<%= char %>'
+           style='vertical-align: middle;'/>
+      <% end %>
+    </a>
+    <% end %>
+    <% end %>
+  </div>
+  
+  <p class="footer">
+    <a href="./">return</a>
+  </p>
+  
+</body>
+</html>
+ 

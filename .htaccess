@@ -1,0 +1,5 @@
+DirectoryIndex index.cgi
+
+# RewriteEngine On
+# RewriteRule ^/$ index.cgi
+# RewriteRule ^(.*)/$ index.cgi?text=$1
