@@ -16,3 +16,16 @@ h1 {
 }
 .flick { color: #0063dc; }
 .r { color: #ff0084; }
+
+.photo {
+  float: left;
+  overflow: hidden;
+  height: 240px;
+}
+
+#result img {
+  vertical-align: bottom;
+}
+#result img.superscript {
+  vertical-align: top;
+}
