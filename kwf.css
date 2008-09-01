@@ -1,7 +1,8 @@
 body {
   color: #000;
   background: #fff;
-  padding: 5%; margin: 0;
+  padding: 1em;
+  margin: 0;
 }
 a:link {
   color: #33f;
@@ -12,15 +13,24 @@ a img {
 h1 {
   font: bold 200% 'Trebuchet MS', sans-serif;
   color: #000;
-  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
 }
 .flick { color: #0063dc; }
 .r { color: #ff0084; }
+
+#source, #result, #footer {
+  margin: 1em 0;
+}
 
 .photo {
   float: left;
   overflow: hidden;
   height: 240px;
+}
+
+#result {
+  overflow: hidden;
 }
 
 #result img {
