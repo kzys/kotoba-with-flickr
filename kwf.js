@@ -116,7 +116,7 @@ var KotobaWithFlickr = Class.create({
     },
 
     convert: function (str) {
-        $('result').innerHTML = '';
+        // $('result').innerHTML = '';
 
         var self = this;
         str.split(new RegExp('')).each(function (c) {
@@ -127,6 +127,11 @@ var KotobaWithFlickr = Class.create({
 
             var div = document.createElement('div');
             div.className = 'photo';
+
+            var span = document.createElement('span');
+            span.appendChild(document.createTextNode(c));
+
+            div.appendChild(span);
             $('result').appendChild(div);
 
             [ KotobaWithFlickr.TABLE[c] || obj ].flatten().each(function (obj) {
@@ -140,8 +145,6 @@ var KotobaWithFlickr = Class.create({
             return;
 
         var anchor = document.createElement('a');
-        parent.appendChild(anchor);
-
         var img = document.createElement('img');
         anchor.appendChild(img);
 
@@ -159,21 +162,90 @@ var KotobaWithFlickr = Class.create({
             if (args.superscript) {
                 img.className = 'superscript';
             }
+
+            img.onload = function () {
+                parent.innerHTML = '';
+                parent.appendChild(anchor);
+            };
         });
+    }
+});
+
+var RomanToKana = Class.create({
+    initialize: function () {
+        this.table = {};
+
+        this.createTable('ぁ', this.createSequence([ 'x', '' ]));
+        this.createTable('か', this.createSequence([ 'k', 'g' ]));
+        this.createTable('さ', this.createSequence([ 's', 'z' ]));
+        this.createTable('た', ['ta', 'da',
+                                'ti', 'di',
+                                'xtu', 'tu', 'du',
+                                'te', 'de',
+                                'to', 'do']);
+        this.createTable('な', this.createSequence([ 'n' ]));
+        this.createTable('は', this.createSequence([ 'h', 'b', 'p' ]));
+        this.createTable('ま', this.createSequence([ 'm' ]));
+        this.createTable('ゃ', ['xya', 'ya',
+                                'xyu', 'yu',
+                                'xyo', 'yo']);
+        this.createTable('ら', this.createSequence([ 'r' ]));
+        this.createTable('ゎ', [ 'xwa', 'wa', 'wyi', 'wye', 'wo']);
+        this.table['nn'] = 'ん';
+
+        this.table['tta'] = 'った';
+        this.table['tti'] = 'っち';
+        this.table['ttu'] = 'っつ';
+        this.table['tte'] = 'って';
+        this.table['tto'] = 'っと';
+        this.table['tya'] = 'ちゃ';
+        this.table['tyi'] = 'ちぃ';
+        this.table['tyu'] = 'ちゅ';
+        this.table['tye'] = 'ちぇ';
+        this.table['tyo'] = 'ちょ';
+
+        console.log(this.table);
+    },
+
+    createSequence: function (ary) {
+        return 'aiueo'.split('').map(function (c2) {
+                                         return ary.map(function (c1) {
+                                                            return c1 + c2;
+                                                        });
+                                     }).flatten();
+    },
+
+    createTable: function (begin, keys) {
+        var self = this;
+        keys.each(function (key) {
+            self.table[key] = begin;
+            begin = begin.succ();
+        });
+    },
+
+    convert: function (kana) {
+        return this.table[kana];
     }
 });
 
 Event.observe(window, 'load', function () {
     var app = new KotobaWithFlickr;
-    $('source').observe('submit', function (e) {
-        var str = $$('#source input')[0].value;
-        app.convert(str);
-        Event.stop(e);
+    var input = $('preedit');
+    var romanToKana = new RomanToKana;
+    input.observe('keyup', function (e) {
+      var kana = romanToKana.convert(input.value);
+      if (kana) {
+          app.convert(kana);
+          input.value = '';
+      }
+    });
+    input.observe('keydown', function (e) {
+      if (e.keyCode == Event.KEY_BACKSPACE && input.value == '') {
+          var photos = $$('#result .photo');
+          var photo = photos[photos.length-1];
+          photo.parentNode.removeChild(photo);
+      }
     });
 
-    if (location.hash) {
-        var str = location.hash.replace(/^#/, '');
-        $$('#source input')[0].value = str;
-        app.convert(str);
-    }
+                  input.focus();
 });

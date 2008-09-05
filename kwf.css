@@ -29,7 +29,7 @@ h1 {
   height: 240px;
 }
 
-#result {
+#body {
   overflow: hidden;
 }
 
@@ -38,4 +38,13 @@ h1 {
 }
 #result img.superscript {
   vertical-align: top;
+}
+
+.photo span {
+  font-size: 200%;
+}
+#preedit {
+  border: none;
+  font-size: 200%;
+  margin-left: 0.2em;
 }
